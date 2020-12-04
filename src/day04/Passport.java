@@ -2,9 +2,10 @@ package day04;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Passport {
-    private List<String> fields;
+    private List<PassportField> fields;
 
     private static List<String> requiredFields = List.of(
             "byr",
@@ -16,17 +17,19 @@ public class Passport {
             "pid"
     );
 
-
-
     public static Passport fromString(String s) {
         Passport passport = new Passport();
-        String[] stringFields = s.replaceAll(":[^ ]+", "").split(" ");
+        String[] stringFields = s.split(" ");
 //        System.out.println("  in Passport.fromString: stringFields are " + Arrays.toString(stringFields));
-        passport.fields = Arrays.asList(stringFields);
+        passport.fields = Arrays.stream(stringFields).map(PassportField::fromString).collect(Collectors.toList());
         return passport;
     }
 
-    public Boolean valid() {
-        return fields.containsAll(requiredFields);
+    public Boolean validPart1() {
+        return fields.stream().map(PassportField::getName).collect(Collectors.toList()).containsAll(requiredFields);
+    }
+
+    public Boolean validPart2() {
+        return validPart1() && fields.stream().allMatch(PassportField::valid);
     }
 }

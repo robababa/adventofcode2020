@@ -19,6 +19,6 @@ public class Day02 {
     }
 
     private static void printValidCount(List<Password> passwords, Predicate<Password> filter, String label) {
-        System.out.printf(label + ": There are %d valid passwords%n", passwords.stream().filter(filter).count());
+        System.out.printf(label + ": There are %d validPart1 passwords%n", passwords.stream().filter(filter).count());
     }
 }
