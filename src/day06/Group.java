@@ -13,40 +13,26 @@ public class Group {
     }
 
     public Long getAnyYesCount() {
-        String allAnswers = travellers.stream().map(Traveller::getAnswers).collect(Collectors.joining());
-        Set<Character> characterSet = new HashSet<>();
-        for (int i = 0; i < allAnswers.length(); i++) {
-            characterSet.add(allAnswers.charAt(i));
+        Set<Character> unionSet = new HashSet<>();
+        for (Traveller traveller : travellers) {
+            unionSet.addAll(traveller.answerSet());
         }
-        return (long) characterSet.size();
-    }
-
-    private void populateSet(HashSet<Character> set, String answers) {
-        for (int i = 0; i < answers.length(); i++) {
-            set.add(answers.charAt(i));
-        }
+        return (long) unionSet.size();
     }
 
     public Long getAllYesCount() {
         if (travellers.size() == 0) {
             return 0L;
         }
-        HashSet<Character> originalSet = new HashSet<>();
+        // prime the set
+        Set<Character> intersectionSet = travellers.get(0).answerSet();
 
-        //prime the list with the first traveller
-        String firstTravellerAnswers = travellers.get(0).getAnswers();
-        populateSet(originalSet, firstTravellerAnswers);
-
-        // now go through the rest of the travellers
-        HashSet<Character> nextSet = new HashSet<>();
-        for (int travellerIndex = 1; travellerIndex < travellers.size(); travellerIndex++) {
-            String nextAnswers = travellers.get(travellerIndex).getAnswers();
-            populateSet(nextSet, nextAnswers);
-            originalSet.retainAll(nextSet);
-            nextSet.clear();
+        // this loop goes through the first traveller again, but that's OK because A intersect A = A for every set A
+        for (Traveller traveller : travellers) {
+            intersectionSet.retainAll(traveller.answerSet());
         }
 
-        return (long) originalSet.size();
+        return (long) intersectionSet.size();
     }
 
     @Override
