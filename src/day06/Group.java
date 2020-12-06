@@ -32,6 +32,7 @@ public class Group {
             intersectionSet.retainAll(traveller.answerSet());
         }
 
+//        System.out.println("getAnyYesCount is " + intersectionSet.size());
         return (long) intersectionSet.size();
     }
 
